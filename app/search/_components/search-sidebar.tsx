@@ -39,18 +39,18 @@ export default function SearchSidebar({
   }
 
   return (
-    <aside className={`bg-neutral-100 p-4 ${className}`}>
+    <aside className={`bg-[#F5F5F0] p-4 ${className}`}>
       <Button
         onClick={handleNewChat}
-        className="mb-4 flex w-full items-center justify-center bg-neutral-200 text-neutral-800 hover:bg-neutral-300"
+        className="mb-4 flex w-full items-center justify-center bg-emerald-600 text-white hover:bg-emerald-700"
       >
         <Plus className="mr-2 size-4" />
         New Search
       </Button>
-      <h2 className="mb-4 text-lg font-semibold text-neutral-800">Sidebar</h2>
+      <h2 className="mb-4 text-lg font-semibold text-neutral-900">Sidebar</h2>
       {chats.map(chat => (
         <Link key={chat.id} href={`/search/${chat.id}`} className="block">
-          <div className="group mb-2 flex items-center justify-between rounded-lg p-2 text-neutral-700 hover:bg-neutral-200">
+          <div className="group mb-2 flex items-center justify-between rounded-lg p-2 text-neutral-800 hover:bg-[#E8E8E0]">
             <span>{chat.name}</span>
             <Trash2
               className="size-4 cursor-pointer opacity-0 transition-opacity hover:text-red-600 group-hover:opacity-100"

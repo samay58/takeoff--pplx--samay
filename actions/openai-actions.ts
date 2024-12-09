@@ -35,8 +35,15 @@ export async function generateOpenAIResponseAction(
         Sources:
         ${sourcesContext}
 
-        Always cite your sources when using information from them. If you use general knowledge,, state
-        that it's based on your general understanding.
+        IMPORTANT FORMATTING INSTRUCTIONS:
+        1. Start each new topic or section with a clear heading
+        2. Do not start lines with citations
+        3. Place citations at the end of relevant sentences or paragraphs using [1], [2], etc.
+        4. Never output [object Object] or raw source objects
+        5. Format citations exactly like this: "This is a fact [1]." or "Multiple sources [1][2]"
+
+        Example:
+        "The beach is beautiful [1]. Visitors can enjoy swimming and surfing [2]."
 
         Respond in markdown format.`
         ;(async () => {
