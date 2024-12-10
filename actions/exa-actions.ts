@@ -17,7 +17,7 @@ export async function searchExaAction(userQuery: string): Promise<ActionState<{
         const exaResponse =await exa.searchAndContents(userQuery, {
             type: "neural",
             useAutoprompt: true,
-            numResults: 10,
+            numResults: 5,
             text: true,
             livecrawl: "always",
             summary: true

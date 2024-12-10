@@ -84,4 +84,37 @@ export async function getChatAction(
     console.error("Error getting chat:", error)
     return { isSuccess: false, message: "Failed to get chat" }
   }
+}
+
+export async function updateChatAction(
+  chatId: string,
+  data: Partial<InsertChat>,
+  userId: string
+): Promise<ActionState<SelectChat>> {
+  try {
+    const [updatedChat] = await db
+      .update(chatsTable)
+      .set({
+        ...data,
+        updatedAt: new Date()
+      })
+      .where(
+        and(
+          eq(chatsTable.id, chatId),
+          eq(chatsTable.userId, userId)
+        )
+      )
+      .returning()
+
+    revalidatePath("/search")
+    
+    return {
+      isSuccess: true,
+      message: "Chat updated successfully",
+      data: updatedChat
+    }
+  } catch (error) {
+    console.error("Error updating chat:", error)
+    return { isSuccess: false, message: "Failed to update chat" }
+  }
 } 

@@ -22,30 +22,32 @@ export async function generateOpenAIResponseAction(
         )
         .join("")
 
-        const systemPrompt = `You are a helpful assistant. Use the following sources
-        to answer the user's query. If the sources don't contain relevant information,
-        you can use your general knowledge to answer.
+        const systemPrompt = `You are a helpful assistant. Use the following sources to answer the user's query. If the sources don't contain relevant information, you can use your general knowledge to answer.
 
-        Today's date is ${new Date().toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        })}.
+Today's date is ${new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+})}.
 
-        Sources:
-        ${sourcesContext}
+Sources:
+${sourcesContext}
 
-        IMPORTANT FORMATTING INSTRUCTIONS:
-        1. Start each new topic or section with a clear heading
-        2. Do not start lines with citations
-        3. Place citations at the end of relevant sentences or paragraphs using [1], [2], etc.
-        4. Never output [object Object] or raw source objects
-        5. Format citations exactly like this: "This is a fact [1]." or "Multiple sources [1][2]"
+IMPORTANT FORMATTING INSTRUCTIONS:
+1. Use markdown formatting for structure
+2. Use headers (##) for main sections
+3. Place citations at the end of sentences using [1], [2], etc.
+4. Citations should be immediately after the relevant text, before any punctuation
+5. Format citations exactly like this: "This is a fact [1]." or "These are facts [1][2]."
+6. Never start a line with citations
+7. Never output raw source objects or [object Object]
 
-        Example:
-        "The beach is beautiful [1]. Visitors can enjoy swimming and surfing [2]."
+Example good formatting:
+## Topic
+This is a fact from the first source [1]. Here is another fact that combines two sources [1][2].
 
-        Respond in markdown format.`
+## Another Topic
+The information comes from the third source [3].`
         ;(async () => {
             const {textStream} = await streamText({
                 model: openai("gpt-4o"),

@@ -1,6 +1,6 @@
 "use client"
 
-import { createChatAction } from "@/actions/db/chats-actions"
+import { createChatAction, updateChatAction } from "@/actions/db/chats-actions"
 import { searchExaAction } from "@/actions/exa-actions"
 import { generateOpenAIResponseAction } from "@/actions/openai-actions"
 import { Button } from "@/components/ui/button"
@@ -59,6 +59,17 @@ export default function ChatArea({
       } else {
         console.error("Failed to create chat:", newChat.message)
         return
+      }
+    } else {
+      const firstMessage = messages.find(m => m.role === "user")
+      if (!firstMessage && userQuery) {
+        await updateChatAction(
+          currentChatId,
+          {
+            name: userQuery.slice(0, 50)
+          },
+          userId
+        )
       }
     }
 
@@ -174,17 +185,16 @@ export default function ChatArea({
   }
 
   const renderWithCitations = (children: React.ReactNode) => {
-    const text = children?.toString() || ""
+    if (!children) return null
 
-    // Clean up the text - remove [object Object] and leading citations
-    const cleanedText = text
-      .replace(/\[object Object\]/g, "") // Remove [object Object]
-      .replace(/^\[\d+\];?\s*/gm, "") // Remove leading citations
-      .replace(/\s+/g, " ") // Clean up extra spaces
+    const text = children
+      .toString()
+      .replace(/\[object Object\]/g, "")
+      .replace(/["""]/g, "") // Remove weird quotes
       .trim()
 
-    // Split only for inline citations
-    const parts = cleanedText.split(/(\[\d+\])/g)
+    // Split by citation markers but preserve them
+    const parts = text.split(/(\[\d+\])/g)
 
     return (
       <div className="inline">
@@ -295,8 +305,23 @@ export default function ChatArea({
                 <div className="prose max-w-none rounded-lg border bg-[#F5F5F0] p-6 text-neutral-900">
                   <ReactMarkdown
                     components={{
-                      p: ({ children }) => renderWithCitations(children),
-                      li: ({ children }) => renderWithCitations(children)
+                      p: ({ children }) => (
+                        <p className="mb-4">{renderWithCitations(children)}</p>
+                      ),
+                      li: ({ children }) => (
+                        <li className="mb-2">
+                          {renderWithCitations(children)}
+                        </li>
+                      ),
+                      h1: ({ children }) => (
+                        <h1 className="mb-4 text-2xl font-bold">{children}</h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="mb-3 text-xl font-bold">{children}</h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="mb-3 text-lg font-bold">{children}</h3>
+                      )
                     }}
                   >
                     {msg.content}
