@@ -27,3 +27,19 @@ export const getSources = async (chatId: string) => {
     throw new Error("Failed to get sources")
   }
 }
+
+export const updateSource = async (
+  sourceId: string,
+  data: Partial<InsertSource>
+) => {
+  try {
+    const [updatedSource] = await db
+      .update(sourcesTable)
+      .set(data)
+      .where(eq(sourcesTable.id, sourceId))
+      .returning()
+    return updatedSource
+  } catch (error) {
+    throw new Error("Failed to update source")
+  }
+}
