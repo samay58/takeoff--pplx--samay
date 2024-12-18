@@ -10,6 +10,10 @@ export const sourcesTable = pgTable("sources", {
   title: text("title").notNull(),
   text: text("text").notNull(),
   summary: text("summary").notNull(),
+  author: text("author"),
+  publishedDate: timestamp("published_date"),
+  publisher: text("publisher"),
+  citationStyle: text("citation_style"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
