@@ -12,11 +12,12 @@ import { useState } from "react"
 import { createMessageAction } from "@/actions/db/messages-actions"
 import { createSourceAction } from "@/actions/db/sources-actions"
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger
+} from "@/components/ui/hover-card"
+import { toast } from "@/components/ui/use-toast"
+import { CitationCard } from "@/components/ui/citation-card"
 import ReactMarkdown from "react-markdown"
 
 interface ChatAreaProps {
@@ -98,6 +99,10 @@ export default function ChatArea({
       createdAt: new Date(),
       updatedAt: new Date(),
       chatId: currentChatId,
+      author: null,
+      publishedDate: null,
+      publisher: null,
+      citationStyle: null,
       ...result
     }))
 
@@ -206,22 +211,26 @@ export default function ChatArea({
 
             if (source) {
               return (
-                <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <sup className="cursor-pointer rounded-full bg-emerald-600 px-1.5 py-0.5 text-xs text-white hover:bg-emerald-700">
-                        {citationMatch[1]}
-                      </sup>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      className="max-w-sm border-emerald-200 bg-[#F5F5F0] text-neutral-900"
-                    >
-                      <p className="font-medium">{source.title}</p>
-                      <p className="text-sm text-emerald-700">{source.url}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <HoverCard key={index}>
+                  <HoverCardTrigger asChild>
+                    <sup className="cursor-pointer rounded-full bg-emerald-600 px-1.5 py-0.5 text-xs text-white hover:bg-emerald-700">
+                      {citationMatch[1]}
+                    </sup>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <CitationCard
+                      source={source}
+                      index={sourceIndex}
+                      onCopy={() => {
+                        toast({
+                          title: "Citation copied",
+                          description:
+                            "The citation has been copied to your clipboard"
+                        })
+                      }}
+                    />
+                  </HoverCardContent>
+                </HoverCard>
               )
             }
           }
