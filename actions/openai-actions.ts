@@ -41,6 +41,8 @@ IMPORTANT FORMATTING INSTRUCTIONS:
 5. Format citations exactly like this: "This is a fact [1]." or "These are facts [1][2]."
 6. Never start a line with citations
 7. Never output raw source objects or [object Object]
+8. When citing multiple sources for the same fact, group them: [1][2] not [1] [2]
+9. Use citations even when paraphrasing or summarizing
 
 Example good formatting:
 ## Topic
