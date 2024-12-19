@@ -217,7 +217,7 @@ export default function ChatArea({
                       {citationMatch[1]}
                     </sup>
                   </HoverCardTrigger>
-                  <HoverCardContent className="w-80" align="right" sideOffset={8}>
+                  <HoverCardContent className="w-80" align="end" sideOffset={8}>
                     <CitationCard
                       source={source}
                       index={sourceIndex}
