@@ -25,8 +25,11 @@ export const getProfileByUserId = async (userId: string) => {
     })
 
     return profile
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error getting profile by user ID:", error)
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ECONNREFUSED') {
+      throw new Error("Database connection failed - check DATABASE_URL configuration")
+    }
     throw new Error("Failed to get profile")
   }
 }
