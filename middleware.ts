@@ -1,22 +1,29 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
+import { NextRequest } from "next/server"
+import { AuthObject } from "@clerk/nextjs/dist/types/server"
 
 const isProtectedRoute = createRouteMatcher(["/search(.*)"])
 
-export default clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware((auth: AuthObject, req: NextRequest) => {
   const { userId, redirectToSignIn } = auth()
 
-  // If the user isn't signed in and the route is private, redirect to sign-in
   if (!userId && isProtectedRoute(req)) {
     return redirectToSignIn({ returnBackUrl: "/login" })
   }
 
-  // If the user is logged in and the route is protected, let them view.
   if (userId && isProtectedRoute(req)) {
     return NextResponse.next()
   }
+
+  return NextResponse.next()
 })
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"]
+  matcher: [
+    "/search/:path*",
+    "/(api|trpc)(.*)",
+    "/((?!.+\\.[\\w]+$|_next).*)",
+    "/"
+  ]
 }
